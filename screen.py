@@ -14,10 +14,5 @@ class Screen:
 				if event.type == pygame.QUIT:
 					running = False
 
-				self.window.fill((255,255,0))
-
 				pygame.display.flip()
 
-
-screen = Screen()
-screen.loop()

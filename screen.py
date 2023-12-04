@@ -1,6 +1,8 @@
 import pygame
 from typing import Tuple
 
+from dot import Dot
+
 class Screen:
     def __init__(self) -> None:
         # pygame window initialization
@@ -16,14 +18,19 @@ class Screen:
         running = True
 
         while running:
+            self.window.fill('BLACK')
+            
+            for dot in self.dots:
+                dot.draw()
+            self.mouse = pygame.mouse.get_pos()
+            self.dot_follow_mouse()
+            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
-            self.window.fill('BLACK')
-
-            self.mouse = pygame.mouse.get_pos()
-            self.dot_follow_mouse()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.dots.append(Dot(self.window, self.mouse, (177,166,166)))
 
             pygame.display.flip()
 

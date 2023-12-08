@@ -12,8 +12,9 @@ class Screen:
         pygame.display.set_caption("Euler's Circuit")
 
 		# class variables
-        self.dots = []
+        self.vertices = []
         self.menu = Menu(self.window, MENU_COLOR)
+        self.mode = "Vertex"
 
     def loop(self) -> None:
         running = True
@@ -27,7 +28,7 @@ class Screen:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.mouse[1] > MENU_HEIGHT:
-                        self.dots.append(Vertex(self.window, self.mouse, DOT_COLOR))
+                        self.vertices.append(Vertex(self.window, self.mouse, VERTEX_COLOR))
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
                             button.press()
@@ -35,20 +36,20 @@ class Screen:
             pygame.display.flip()
 
     def draw(self):
-        self.window.fill('BLACK')
+        self.window.fill(SCREEN_BACKGROUND)
             
-        for dot in self.dots:
-            dot.draw()
+        for vertex in self.vertices:
+            vertex.draw()
         
-        self.dot_follow_mouse()
+        self.vertex_follow_mouse()
         self.menu.draw()
 
-    def dot_follow_mouse(self) -> None:
+    def vertex_follow_mouse(self) -> None:
         if self.mouse == (0,0):
             return
         if self.mouse[1] < MENU_HEIGHT:
             return
-        pygame.draw.circle(self.window, 'white', self.mouse, 16)
+        pygame.draw.circle(self.window, CURSOR_COLOR, self.mouse, VERTEX_SIZE)
 
 
 class Button:

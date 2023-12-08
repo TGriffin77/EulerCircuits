@@ -2,7 +2,7 @@ import pygame
 from typing import Tuple
 
 from constants import *
-from euler import Dot, Line
+from euler import Vertex, Edge
 
 class Screen:
     def __init__(self) -> None:
@@ -27,7 +27,10 @@ class Screen:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.mouse[1] > MENU_HEIGHT:
-                        self.dots.append(Dot(self.window, self.mouse, DOT_COLOR))
+                        self.dots.append(Vertex(self.window, self.mouse, DOT_COLOR))
+                    for button in self.menu.buttons:
+                        if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
+                            button.press()
 
             pygame.display.flip()
 
@@ -47,6 +50,7 @@ class Screen:
             return
         pygame.draw.circle(self.window, 'white', self.mouse, 16)
 
+
 class Button:
     def __init__(self, window: pygame.Surface, color: Tuple[int, int, int], 
                  coordinates: Tuple[int, int], 
@@ -55,9 +59,14 @@ class Button:
         self.window = window
         self.color = color
         self.rect = pygame.rect.Rect(coordinates[0], coordinates[1], width, height)
+        self.text = text
     
     def draw(self):
         pygame.draw.rect(self.window, self.color, self.rect)
+
+    def press(self):
+        pass
+
 
 class Menu:
     def __init__(self, window: pygame.Surface, color: Tuple[int, int, int]):
@@ -71,6 +80,13 @@ class Menu:
         res = []
 
         # Append all buttons required.
+        size = (int(WIDTH*.395), int(MENU_HEIGHT*0.86))
+
+        coords1 = (int(WIDTH*0.07), int(MENU_HEIGHT*0.07))
+        res.append(Button(self.window, BUTTON_COLOR, coords1, size[0], size[1], 'Vertex'))
+
+        coords2 = (int(WIDTH*0.535), int(MENU_HEIGHT*0.07))
+        res.append(Button(self.window, BUTTON_COLOR, coords2, size[0], size[1], 'Edge'))
 
         return res
 

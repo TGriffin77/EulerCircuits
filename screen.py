@@ -1,18 +1,19 @@
 import pygame
 from typing import Tuple
 
+from constants import *
 from euler import Dot, Line
 
 class Screen:
     def __init__(self) -> None:
         # pygame window initialization
         pygame.init()
-        self.window = pygame.display.set_mode((600,800))
+        self.window = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption("Euler's Circuit")
 
 		# class variables
         self.dots = []
-        self.menu = Menu(self.window, (190,189,176))
+        self.menu = Menu(self.window, MENU_COLOR)
 
     def loop(self) -> None:
         running = True
@@ -25,8 +26,8 @@ class Screen:
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.mouse[1] > 200:
-                        self.dots.append(Dot(self.window, self.mouse, (177,166,166)))
+                    if self.mouse[1] > MENU_HEIGHT:
+                        self.dots.append(Dot(self.window, self.mouse, DOT_COLOR))
 
             pygame.display.flip()
 
@@ -42,7 +43,7 @@ class Screen:
     def dot_follow_mouse(self) -> None:
         if self.mouse == (0,0):
             return
-        if self.mouse[1] < 200:
+        if self.mouse[1] < MENU_HEIGHT:
             return
         pygame.draw.circle(self.window, 'white', self.mouse, 16)
 
@@ -64,7 +65,7 @@ class Menu:
         self.window = window
         self.color = color
         self.buttons = self.init_buttons()
-        self.rect = pygame.rect.Rect(0, 0, 600, 200)
+        self.rect = pygame.rect.Rect(0, 0, WIDTH, MENU_HEIGHT)
 
     def init_buttons(self):
         res = []

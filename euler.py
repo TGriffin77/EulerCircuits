@@ -9,3 +9,6 @@ class Dot:
 
     def draw(self):
         draw.circle(self.window, self.color, self.position, 16)
+
+class Line:
+    pass

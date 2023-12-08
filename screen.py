@@ -8,6 +8,7 @@ class Screen:
     def __init__(self) -> None:
         # pygame window initialization
         pygame.init()
+        pygame.font.init()
         self.window = pygame.display.set_mode((WIDTH,HEIGHT))
         pygame.display.set_caption("Euler's Circuit")
 
@@ -26,12 +27,22 @@ class Screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.mouse[1] > MENU_HEIGHT:
-                        self.vertices.append(Vertex(self.window, self.mouse, VERTEX_COLOR))
+                if event.type == pygame.MOUSEMOTION:
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
-                            button.press()
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                            break
+                        else:
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Place vertices on click
+                    if self.mouse[1] > MENU_HEIGHT and self.mode == "Vertex":
+                        self.vertices.append(Vertex(self.window, self.mouse, VERTEX_COLOR))
+                    # Check for button clicks
+                    for button in self.menu.buttons:
+                        if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
+                            self.mode = button.press()
 
             pygame.display.flip()
 
@@ -41,7 +52,13 @@ class Screen:
         for vertex in self.vertices:
             vertex.draw()
         
-        self.vertex_follow_mouse()
+        if self.mode == "Vertex":
+            self.vertex_follow_mouse()
+        elif self.mode == "Edge":
+            pass
+        else:
+            raise Exception("Invalid mode activated, terminating application")
+        
         self.menu.draw()
 
     def vertex_follow_mouse(self) -> None:
@@ -61,12 +78,16 @@ class Button:
         self.color = color
         self.rect = pygame.rect.Rect(coordinates[0], coordinates[1], width, height)
         self.text = text
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.button_text = self.font.render(self.text, True, (0,0,0))
     
     def draw(self):
         pygame.draw.rect(self.window, self.color, self.rect)
 
+        self.window.blit(self.button_text, self.button_text.get_rect(center = self.rect.center))
+
     def press(self):
-        pass
+        return self.text
 
 
 class Menu:

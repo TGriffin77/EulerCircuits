@@ -18,13 +18,15 @@ class Screen:
         running = True
 
         while running:
+            self.mouse = pygame.mouse.get_pos()
             self.draw()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.dots.append(Dot(self.window, self.mouse, (177,166,166)))
+                    if self.mouse[1] > 200:
+                        self.dots.append(Dot(self.window, self.mouse, (177,166,166)))
 
             pygame.display.flip()
 
@@ -33,12 +35,14 @@ class Screen:
             
         for dot in self.dots:
             dot.draw()
-        self.mouse = pygame.mouse.get_pos()
+        
         self.dot_follow_mouse()
         self.menu.draw()
 
     def dot_follow_mouse(self) -> None:
         if self.mouse == (0,0):
+            return
+        if self.mouse[1] < 200:
             return
         pygame.draw.circle(self.window, 'white', self.mouse, 16)
 

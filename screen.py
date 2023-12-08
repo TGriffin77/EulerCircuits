@@ -14,7 +14,7 @@ class Screen:
 
 		# class variables
         self.vertices = []
-        self.menu = Menu(self.window, MENU_COLOR)
+        self.menu = Menu(self.window)
         self.mode = "Vertex"
 
     def loop(self) -> None:
@@ -27,18 +27,21 @@ class Screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
                 if event.type == pygame.MOUSEMOTION:
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
                             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                            button.hover()
                             break
                         else:
+                            button.idle()
                             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # Place vertices on click
                     if self.mouse[1] > MENU_HEIGHT and self.mode == "Vertex":
-                        self.vertices.append(Vertex(self.window, self.mouse, VERTEX_COLOR))
+                        self.vertices.append(Vertex(self.window, self.mouse))
                     # Check for button clicks
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
@@ -70,12 +73,12 @@ class Screen:
 
 
 class Button:
-    def __init__(self, window: pygame.Surface, color: Tuple[int, int, int], 
+    def __init__(self, window: pygame.Surface,  
                  coordinates: Tuple[int, int], 
                  width: float, height: float, text: str) -> None:
 		
         self.window = window
-        self.color = color
+        self.color = BUTTON_COLOR
         self.rect = pygame.rect.Rect(coordinates[0], coordinates[1], width, height)
         self.text = text
         self.font = pygame.font.Font('freesansbold.ttf', 32)
@@ -87,14 +90,21 @@ class Button:
         self.window.blit(self.button_text, self.button_text.get_rect(center = self.rect.center))
 
     def press(self):
+        self.color = PRESS_BUTTON_COLOR
         return self.text
+    
+    def hover(self):
+        self.color = HOVER_BUTTON_COLOR
+
+    def idle(self):
+        self.color = BUTTON_COLOR
 
 
 class Menu:
-    def __init__(self, window: pygame.Surface, color: Tuple[int, int, int]):
+    def __init__(self, window: pygame.Surface):
 
         self.window = window
-        self.color = color
+        self.color = MENU_COLOR
         self.buttons = self.init_buttons()
         self.rect = pygame.rect.Rect(0, 0, WIDTH, MENU_HEIGHT)
 
@@ -105,10 +115,10 @@ class Menu:
         size = (int(WIDTH*.395), int(MENU_HEIGHT*0.86))
 
         coords1 = (int(WIDTH*0.07), int(MENU_HEIGHT*0.07))
-        res.append(Button(self.window, BUTTON_COLOR, coords1, size[0], size[1], 'Vertex'))
+        res.append(Button(self.window, coords1, size[0], size[1], 'Vertex'))
 
         coords2 = (int(WIDTH*0.535), int(MENU_HEIGHT*0.07))
-        res.append(Button(self.window, BUTTON_COLOR, coords2, size[0], size[1], 'Edge'))
+        res.append(Button(self.window, coords2, size[0], size[1], 'Edge'))
 
         return res
 

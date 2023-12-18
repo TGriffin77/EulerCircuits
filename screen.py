@@ -16,6 +16,8 @@ class Screen:
         self.vertices = []
         self.menu = Menu(self.window)
         self.mode = "Vertex"
+        self.selection = Vertex
+        self.selecting = False
 
     def loop(self) -> None:
         running = True
@@ -27,7 +29,7 @@ class Screen:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-
+ 
                 if event.type == pygame.MOUSEMOTION:
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:
@@ -42,6 +44,23 @@ class Screen:
                     # Place vertices on click
                     if self.mouse[1] > MENU_HEIGHT and self.mode == "Vertex":
                         self.vertices.append(Vertex(self.window, self.mouse))
+                    # Place edges on hold
+                    if self.mouse[1] > MENU_HEIGHT and self.mode == "Edge":
+                        # left click
+                        if event.button == 1:
+                            for vertex in self.vertices:
+                                if vertex.rect.collidepoint(event.pos):
+                                    if not self.selecting:
+                                        self.selecting = True
+                                        self.selection = vertex
+                                    else:
+                                        pass
+                                    
+                        # right click 
+                        if event.button == 3:
+                            self.selecting = False
+                            print(self.selecting)
+
                     # Check for button clicks
                     for button in self.menu.buttons:
                         if button.rect.left < self.mouse[0] < button.rect.right and button.rect.top < self.mouse[1] < button.rect.bottom:

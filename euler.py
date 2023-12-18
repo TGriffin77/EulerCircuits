@@ -17,6 +17,7 @@ class Edge:
         self.window = window
         self.vertex1 = vertex1
         self.vertex2 = vertex2
+        self.rect = Rect
 
     def draw(self):
-        draw.line(self.window, EDGE_COLOR, self.vertex1.position, self.vertex2.position, EDGE_SIZE)
+        self.rect = draw.line(self.window, EDGE_COLOR, self.vertex1.position, self.vertex2.position, EDGE_SIZE)

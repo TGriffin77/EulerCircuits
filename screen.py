@@ -14,6 +14,7 @@ class Screen:
 
 		# class variables
         self.vertices = []
+        self.edges = []
         self.menu = Menu(self.window)
         self.mode = "Vertex"
         self.selection = Vertex
@@ -53,8 +54,17 @@ class Screen:
                                     if not self.selecting:
                                         self.selecting = True
                                         self.selection = vertex
+                                        print(self.selection)
                                     else:
-                                        pass
+                                        new_edge = Edge(self.window, self.selection, vertex)
+                                        for edge in self.edges:
+                                            if (new_edge.vertex1 == edge.vertex1 and new_edge.vertex2 == edge.vertex2) or (new_edge.vertex1 == edge.vertex2 and new_edge.vertex2 == edge.vertex1):
+                                                self.selecting = False
+                                        if self.selecting:
+                                            self.edges.append(new_edge)
+                                            self.selecting = False
+                                            self.selection = None
+                                        print(self.edges[-1])
                                     
                         # right click 
                         if event.button == 3:
@@ -73,6 +83,8 @@ class Screen:
             
         for vertex in self.vertices:
             vertex.draw()
+        for edge in self.edges:
+            edge.draw()
         
         if self.mode == "Vertex":
             self.vertex_follow_mouse()

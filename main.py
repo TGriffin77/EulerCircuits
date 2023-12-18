@@ -1,6 +1,9 @@
 from screen import Screen
 
 if __name__ == "__main__":
-    display = Screen()
-    display.loop()
+    try:
+        display = Screen()
+        display.loop()
+    finally:
+        pass # do something at end.
 

@@ -1,16 +1,22 @@
-from pygame import draw
+from pygame import draw, Surface, Rect
 from typing import Tuple
 
 from constants import *
 
 class Vertex:
-    def __init__(self, window, position: Tuple[int, int]):
+    def __init__(self, window: Surface, position: Tuple[int, int]):
         self.window = window
         self.position = position
-        self.color = VERTEX_COLOR
+        self.rect = Rect
 
     def draw(self):
-        draw.circle(self.window, self.color, self.position, VERTEX_SIZE)
+        self.rect = draw.circle(self.window, VERTEX_COLOR, self.position, VERTEX_SIZE)
 
 class Edge:
-    pass
+    def __init__(self, window: Surface, vertex1: Vertex, vertex2: Vertex):
+        self.window = window
+        self.vertex1 = vertex1
+        self.vertex2 = vertex2
+
+    def draw(self):
+        draw.line(self.window, EDGE_COLOR, self.vertex1.position, self.vertex2.position, EDGE_SIZE)
